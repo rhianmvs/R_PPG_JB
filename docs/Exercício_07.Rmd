@@ -1,0 +1,67 @@
+---
+title: "Exercício_07"
+author: "Rhian Vieira"
+date: "18/07/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Construa uma janela gráfica com 1 linha e três colunas seguindo as instruções abaixo:
+
+1) Comprimento da pétala no eixo x e largura da sépala no eixo y, sendo cada espécie em uma janela gráfica
+2) Plote cada espécie com uma cor diferente
+3) Adicione a reta do modelo linear
+4) Inclua rótulos A, B e C em cada uma das janelas gráficas
+5) Crie um diretório /figs em seu repositório
+6) Salve o gráfico em png em uma boa resolução, com o tamanho dos pontos e eixos legíveis no diretório /figs
+
+``` {r }
+par(mfrow=c(1,3))
+
+ly<-"Largura das sépalas"
+lx<-"Comprimento das pétalas"
+
+# I. setosa
+comp_petal_s<-iris$Petal.Length[iris$Species=="setosa"]
+larg_sepal_s<-iris$Sepal.Width[iris$Species=="setosa"]
+msetosa<-lm(larg_sepal_s~comp_petal_s)
+coefsetosa<-coef(msetosa)
+
+plot(larg_sepal_s~comp_petal_s,col="red",ylab=ly, xlab=lx, las=1, bty="l")
+abline(a=coefsetosa[1], b=coefsetosa[2],col="red", lwd=2)
+mtext("I. setosa", 3, adj=0, font=3)
+
+#I. versicolor
+comp_petal_vers<-iris$Petal.Length[iris$Species=="versicolor"]
+larg_sepal_vers<-iris$Sepal.Width[iris$Species=="versicolor"]
+mversicolor<-lm(larg_sepal_vers~comp_petal_vers)
+coefversicolor<-coef(mversicolor)
+
+plot(larg_sepal_vers~comp_petal_vers,col="green",ylab=ly, xlab=lx, las=1,bty="l") 
+abline(a=coefversicolor[1], b=coefversicolor[2],col="green", lwd=2)
+mtext("I. versicolor", 3, adj=0, font=3)
+
+#I. virginica
+comp_petal_virg<-iris$Petal.Length[iris$Species=="virginica"]
+larg_sepal_virg<-iris$Sepal.Width[iris$Species=="virginica"]
+mvirginica<-lm(larg_sepal_virg~comp_petal_virg)
+coefvirginica<-coef(mvirginica)
+
+plot(larg_sepal_virg~comp_petal_virg,col="blue",ylab=ly, xlab=lx, las=1,bty="l") 
+abline(a=coefvirginica[1], b=coefvirginica[2],col="blue", lwd=2)
+mtext("I. virginica", 3, adj=0, font=3)
+
+```
+
+
+#DESAFIO
+
+Construa um gráfico de pontos, contendo cada uma das variáveis (comprimento da sépala, largura da sépala, comprimento da pétala, largura da pétala) no eixo x e os valores médios no eixo y. Inclua as barras de erro (representando o desvio padrão em torno da média). Salve o gráfico em png no diretório /figs
+
+```{r cars}
+summary(cars)
+```
+
