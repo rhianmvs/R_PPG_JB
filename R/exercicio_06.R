@@ -2,6 +2,8 @@
 
 # o Quarteto de Anscombe
 
+library(GGally)
+
 data("anscombe")
 
 dim(anscombe) #dimensões; nº de linhas x colunas
@@ -247,13 +249,88 @@ ggpairs(iris[-5])
 
 read.csv("./Data/trees.csv")
 
+
 trees<-read.csv("./Data/trees.csv")
+trees["sp"]<-"sp"   #para usar "tapply" precisa de um fator; OBS NÃO CONSEGUI USAR "AS.FACTOR"
+
+matrix_trees<-matrix(NA,ncol=3,nrow=1)   #quero construir uma matrix com esses dados!!!
+colnames(matrix_trees)<-names(trees[1:3])
+rownames(matrix_trees)<-"desvio_padrao"
+
 
 summary(trees)
 
-dp_trees<-apply(trees,2,sd)
-var_trees<-apply(trees, 2,sd)
+for (i in 1:3) {   #usando a função tapply
+  matrix_trees[,i]<-tapply(trees[,i],trees$sp,sd)
+
+}
+
+matrix_trees
+
+
+trees<-read.csv("./Data/trees.csv")
+trees["sp"]<-NULL
+
+
+matrix_trees<-matrix(NA,ncol=3,nrow=1)   #quero construir uma matrix com esses dados!!!
+colnames(matrix_trees)<-names(trees[1:3])
+rownames(matrix_trees)<-"desvio_padrao"
+
+
+summary(trees)
+
+for (i in 1:3) { #usando a função "sd" simples
+  matrix_trees[,i]<-sd(trees[,i])
+
+}
+
+matrix_trees
+
+#fazendo um super loop!!
 
 matrix_trees<-matrix(NA,ncol=3,nrow=2)   #quero construir uma matrix com esses dados!!!
+colnames(matrix_trees)<-names(trees[1:3])
+rownames(matrix_trees)<-c("desvio_padrao","variancia")
 
+for (i in 1:3) {
+  matrix_trees[1,i]<-sd(trees[,i])
+  matrix_trees[2,i]<-var(trees[,i])
+
+}
+
+matrix_trees
+
+par(mfrow=c(1,3))
+
+hist_girth<-hist(trees$Girth)
+hist_height<-hist(trees$Height)
+hist_vol<-hist(trees$Volume)
+
+boxplot_g<-boxplot(trees$Girth)
+boxplot_h<-boxplot(trees$Height)
+boxplot_v<-boxplot(trees$Volume)
+
+#VERIFICANDO OUTLIERS
+
+boxplot_g2<-boxplot(trees$Girth,plot=FALSE)
+boxplot_g2
+outliers_girth<-boxplot_g2$out
+outliers_girth
+which(trees$Girth %in% outliers_girth)
+
+boxplot_h2<-boxplot(trees$Height,plot=FALSE)
+boxplot_h2
+outliers_height<-boxplot_h2$out
+outliers_height
+which(trees$Height %in% outliers_height)
+
+boxplot_v2<-boxplot(trees$Volume,plot=FALSE)
+boxplot_v2
+outliers_vol<-boxplot_v2$out
+outliers_vol
+which(trees$Volume %in% outliers_vol)
+
+#correçacao
+
+ggpairs(trees)
 
