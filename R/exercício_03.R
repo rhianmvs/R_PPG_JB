@@ -1,4 +1,3 @@
-library(vegan)
 
 read.csv2("./Data/exercicio_03_modificado.csv")
 

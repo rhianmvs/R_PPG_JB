@@ -144,7 +144,7 @@ arrows(x0=1:5,
 
 #Construa uma janela gráfica com 1 linha e três colunas seguindo as instruções abaixo
 #Comprimento da pétala no eixo x e largura da sépala no eixo y, sendo cada espécie em uma janela gráfica
-#Padronize os eixos x e y para todas as espécies
+#Padronize os eixos x e y para todas as espécies NÃO FAZER
 #Plote cada espécie com uma cor diferente
 #Adicione a reta do modelo linear
 #Inclua rótulos A, B e C em cada uma das janelas gráficas
@@ -155,13 +155,166 @@ arrows(x0=1:5,
 
 data("iris")
 
+par(mfrow=c(1,1))
+
 par(mfrow=c(1,3))
 
+
+# I. setosa
 comp_petal_s<-iris$Petal.Length[iris$Species=="setosa"]
 larg_sepal_s<-iris$Sepal.Width[iris$Species=="setosa"]
 
-msetosa<-lm(comp_petal_s~larg_sepal_s)
+msetosa<-lm(larg_sepal_s~comp_petal_s)
 coefsetosa<-coef(msetosa)
 
-plot(comp_petal_s~larg_sepal_s)
+ly<-"Largura das sépalas"
+lx<-"Comprimento das pétalas"
+
+plot(larg_sepal_s~comp_petal_s,
+     col="red", #col=define a cor
+     ylab=ly, xlab=lx, las=1, bty="l") #ylab/xlab definem os rótulos dos eixos
+# linha do previsto pelo modelo
+## a + b*x
+abline(a=coefsetosa[1], b=coefsetosa[2],
+       col="red", lwd=2) #lwd define a espessura da linha que será criada
+mtext("I. setosa", 3, adj=0, font=3) #título do gráfico
+
+
+
+#I. versicolor
+comp_petal_vers<-iris$Petal.Length[iris$Species=="versicolor"]
+larg_sepal_vers<-iris$Sepal.Width[iris$Species=="versicolor"]
+
+mversicolor<-lm(larg_sepal_vers~comp_petal_vers)
+coefversicolor<-coef(mversicolor)
+
+plot(larg_sepal_vers~comp_petal_vers,
+     col="green", #col=define a cor
+     ylab=ly, xlab=lx, las=1,bty="l") #ylab/xlab definem os rótulos dos eixos
+# linha do previsto pelo modelo
+## a + b*x
+abline(a=coefversicolor[1], b=coefversicolor[2],
+       col="green", lwd=2) #lwd define a espessura da linha que será criada
+mtext("I. versicolor", 3, adj=0, font=3) #título do gráfico
+
+
+#I. virginica
+comp_petal_virg<-iris$Petal.Length[iris$Species=="virginica"]
+larg_sepal_virg<-iris$Sepal.Width[iris$Species=="virginica"]
+
+mvirginica<-lm(larg_sepal_virg~comp_petal_virg)
+coefvirginica<-coef(mvirginica)
+
+plot(larg_sepal_virg~comp_petal_virg,
+     col="blue", #col=define a cor
+     ylab=ly, xlab=lx, las=1,bty="l") #ylab/xlab definem os rótulos dos eixos
+# linha do previsto pelo modelo
+## a + b*x
+abline(a=coefvirginica[1], b=coefvirginica[2],
+       col="blue", lwd=2) #lwd define a espessura da linha que será criada
+mtext("I. virginica", 3, adj=0, font=3) #título do gráfico
+
+
+
+#exportando o gráfico no formato PNG
+# a funcao png cria o arquivo, daqui pra frente você não vai mais ver o gráfico
+png("./figs/figura02_iris.png", res=300, width=2400, height=1200)
+par(mfrow=c(1,3))
+plot(larg_sepal_s~comp_petal_s,
+     col="red", #col=define a cor
+     ylab=ly, xlab=lx, las=1, bty="l") #ylab/xlab definem os rótulos dos eixos
+# linha do previsto pelo modelo
+## a + b*x
+abline(a=coefsetosa[1], b=coefsetosa[2],
+       col="red", lwd=2) #lwd define a espessura da linha que será criada
+mtext("I. setosa", 3, adj=0, font=3) #título do gráfico
+plot(larg_sepal_vers~comp_petal_vers,
+     col="green", #col=define a cor
+     ylab=ly, xlab=lx, las=1,bty="l") #ylab/xlab definem os rótulos dos eixos
+# linha do previsto pelo modelo
+## a + b*x
+abline(a=coefversicolor[1], b=coefversicolor[2],
+       col="green", lwd=2) #lwd define a espessura da linha que será criada
+mtext("I. versicolor", 3, adj=0, font=3) #título do gráfico
+plot(larg_sepal_virg~comp_petal_virg,
+     col="blue", #col=define a cor
+     ylab=ly, xlab=lx, las=1,bty="l") #ylab/xlab definem os rótulos dos eixos
+# linha do previsto pelo modelo
+## a + b*x
+abline(a=coefvirginica[1], b=coefvirginica[2],
+       col="blue", lwd=2) #lwd define a espessura da linha que será criada
+mtext("I. virginica", 3, adj=0, font=3)
+dev.off()
+
+par(mfrow=c(1,1))
+
+#Construa um gráfico de pontos, contendo cada uma das variáveis (comprimento da sépala, largura da sépala, comprimento da pétala, largura da pétala) no eixo x e os valores médios no eixo y. Inclua as barras de erro (representando o desvio padrão em torno da média). Salve o gráfico em png no diretório /figs
+
+matrix_pecasflorais<-matrix(NA, ncol=4, nrow=3) #matriz das médias
+colnames(matrix_pecasflorais)<-names(iris[1:4])
+rownames(matrix_pecasflorais)<-unique(iris$Species)
+
+matrix_pecasflorais_sd<-matrix(NA, ncol=4, nrow=3) #matriz dos desvpads
+colnames(matrix_pecasflorais_sd)<-names(iris[1:4])
+rownames(matrix_pecasflorais_sd)<-unique(iris$Species)
+
+for(i in 1:4){   #calculo das medias das peças florais das especies de iris
+        matrix_pecasflorais[,i]<-tapply(iris[,i],iris$Species,mean)
+}
+
+for(i in 1:4){    #calculo do desvpad das pças florais das especies de iris
+        matrix_pecasflorais_sd[,i]<-tapply(iris[,i],iris$Species,sd)
+}
+
+par(mfrow=c(1,3), las=1, bty="l")
+
+#setosa
+plot(x=1:4,matrix_pecasflorais[1,],ylim=c(0,8),xaxt="n",xlab="Peças florais de I. setosa",ylab="Mean", col="red")
+axis(1, at=1:4, labels=c("Sepal.Length","Sepal.Width","Petal.Length","Petal.Width"))
+arrows(x0=1:4,
+       y0=matrix_pecasflorais[1,]+matrix_pecasflorais_sd[1,],
+       y1=matrix_pecasflorais[1,]-matrix_pecasflorais_sd[1,], angle=90, length=0.05, code=3, col="red")
+
+#versicolor
+plot(x=1:4,matrix_pecasflorais[2,],ylim=c(0,8),xaxt="n",xlab="Peças florais de I. versicolor",ylab="Mean", col="blue")
+axis(1, at=1:4, labels=c("Sepal.Length","Sepal.Width","Petal.Length","Petal.Width"))
+arrows(x0=1:4,
+       y0=matrix_pecasflorais[2,]+matrix_pecasflorais_sd[2,],
+       y1=matrix_pecasflorais[2,]-matrix_pecasflorais_sd[2,], angle=90, length=0.05, code=3, col="blue")
+
+#virginica
+plot(x=1:4,matrix_pecasflorais[3,],ylim=c(0,8),xaxt="n",xlab="Peças florais de I. virginica",ylab="Mean", col="green")
+axis(1, at=1:4, labels=c("Sepal.Length","Sepal.Width","Petal.Length","Petal.Width"))
+arrows(x0=1:4,
+       y0=matrix_pecasflorais[3,]+matrix_pecasflorais_sd[3,],
+       y1=matrix_pecasflorais[3,]-matrix_pecasflorais_sd[3,], angle=90, length=0.05, code=3, col="green")
+
+
+
+#salvando em png
+png("./figs/desafio_07.png", res=300, width=4000, height=1200)
+par(mfrow=c(1,3), las=1, bty="l")
+
+#setosa
+plot(x=1:4,matrix_pecasflorais[1,],ylim=c(0,8),xaxt="n",xlab="Peças florais de I. setosa",ylab="Mean", col="red")
+axis(1, at=1:4, labels=c("Sepal.Length","Sepal.Width","Petal.Length","Petal.Width"))
+arrows(x0=1:4,
+       y0=matrix_pecasflorais[1,]+matrix_pecasflorais_sd[1,],
+       y1=matrix_pecasflorais[1,]-matrix_pecasflorais_sd[1,], angle=90, length=0.05, code=3, col="red")
+
+#versicolor
+plot(x=1:4,matrix_pecasflorais[2,],ylim=c(0,8),xaxt="n",xlab="Peças florais de I. versicolor",ylab="Mean", col="blue")
+axis(1, at=1:4, labels=c("Sepal.Length","Sepal.Width","Petal.Length","Petal.Width"))
+arrows(x0=1:4,
+       y0=matrix_pecasflorais[2,]+matrix_pecasflorais_sd[2,],
+       y1=matrix_pecasflorais[2,]-matrix_pecasflorais_sd[2,], angle=90, length=0.05, code=3, col="blue")
+
+#virginica
+plot(x=1:4,matrix_pecasflorais[3,],ylim=c(0,8),xaxt="n",xlab="Peças florais de I. virginica",ylab="Mean", col="green")
+axis(1, at=1:4, labels=c("Sepal.Length","Sepal.Width","Petal.Length","Petal.Width"))
+arrows(x0=1:4,
+       y0=matrix_pecasflorais[3,]+matrix_pecasflorais_sd[3,],
+       y1=matrix_pecasflorais[3,]-matrix_pecasflorais_sd[3,], angle=90, length=0.05, code=3, col="green")
+
+dev.off()
 
