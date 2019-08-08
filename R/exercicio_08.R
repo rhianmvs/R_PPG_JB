@@ -70,9 +70,12 @@ writeOGR(
   driver = "ESRI Shapefile" #formato pretendido para exportação
 )
 
-##convertendo em raster
 
 ogrDrivers()
+
+
+##convertendo em raster
+
 
 westeros_raster <- raster(westeros_contorno, res = 0.08)
 westeros_raster <- rasterize(westeros_contorno, westeros_raster) #deixando com o mesmo extent
@@ -98,3 +101,47 @@ vars <- stack("./Aulas/analise_de_dados_ENBT_2019-master/aula08/data/vars.tif")
 plot(vars)
 
 
+## salvando raster
+
+writeRaster(var1, "./Results/vars1.tif")  # se tiver arquivo de mesmo nome, pode usar o argumento overwrite = T
+
+
+## Álgebra de raster
+
+media <- mean(vars)
+plot(media)
+
+
+## Modificando Raster
+
+westeros<-readOGR("./Aulas/analise_de_dados_ENBT_2019-master/aula08/data/GoTRelease/political.shp", encoding = "UTF-8")
+
+stark <- westeros[westeros$ClaimedBy == "Stark",]
+stark
+
+plot(westeros, axes = T, las = 1)
+plot(stark, add = T, col = "tomato")
+
+plot(var1)
+plot(westeros, add = T)
+
+var1_croped <- crop(var1, stark) #função crop
+var1_croped
+plot(var1_croped)
+plot(stark, add = T)
+
+var1_masked <- mask(var1, stark) #função mask
+var1_masked
+plot(var1_masked)
+plot(stark, add = T)
+
+var1.masked2 = mask(crop(var1,stark), stark)
+var1.masked2
+plot(var1.masked2)
+plot(stark, add = T)
+
+# Alterando a resolução do raster
+
+var1.aggregated<- aggregate(var1, fact = 5, fun = "mean")
+var1.aggregated
+plot(var1.aggregated)
